@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="@string/date"
+                android:fontFamily="@font/poppins_regular"
                 android:textSize="12sp" />
 
             <TextView
@@ -38,6 +39,7 @@
                 android:gravity="start"
                 android:text="@string/title"
                 android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="@string/description"
+                android:fontFamily="@font/poppins_regular"
                 android:textSize="14sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
