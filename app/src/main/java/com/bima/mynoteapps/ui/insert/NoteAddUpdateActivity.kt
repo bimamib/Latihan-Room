@@ -2,11 +2,13 @@ package com.bima.mynoteapps.ui.insert
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bima.mynoteapps.R
 import com.bima.mynoteapps.ViewModelFactory
 import com.bima.mynoteapps.database.Note
 import com.bima.mynoteapps.databinding.ActivityNoteAddUpdateBinding
+import com.bima.mynoteapps.helper.DateHelper
 
 class NoteAddUpdateActivity : AppCompatActivity() {
 
@@ -30,6 +32,68 @@ class NoteAddUpdateActivity : AppCompatActivity() {
         setContentView(binding?.root)
         
         noteAddUpdateViewModel = obtainViewModel(this@NoteAddUpdateActivity)
+
+        note = intent.getParcelableExtra(EXTRA_NOTE)
+        if (note != null) {
+            isEdit = true
+        } else {
+            note = Note()
+        }
+
+        val actionBarTitle: String
+        val btnTitle: String
+
+        if (isEdit) {
+            actionBarTitle = getString(R.string.change)
+            btnTitle = getString(R.string.update)
+            if (note != null) {
+                note?.let { note ->
+                    binding?.edtTitle?.setText(note.title)
+                    binding?.edtDescription?.setText(note.description)
+                }
+            }
+        } else {
+            actionBarTitle = getString(R.string.add)
+            btnTitle = getString(R.string.save)
+        }
+
+        supportActionBar?.title = actionBarTitle
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding?.btnSubmit?.text = btnTitle
+        binding?.btnSubmit?.setOnClickListener {
+            val title = binding?.edtTitle?.text.toString().trim()
+            val description = binding?.edtDescription?.text.toString().trim()
+            when {
+                title.isEmpty() -> {
+                    binding?.edtTitle?.error = getString(R.string.empty)
+                }
+                description.isEmpty() -> {
+                    binding?.edtDescription?.error = getString(R.string.empty)
+                }
+                else -> {
+                    note.let { note ->
+                        note?.title = title
+                        note?.description = description
+                    }
+                    if (isEdit) {
+                        noteAddUpdateViewModel.update(note as Note)
+                        showToast(getString(R.string.changed))
+                    } else {
+                        note.let { note ->
+                            note?.date = DateHelper.getCurrentDate()
+                        }
+                        noteAddUpdateViewModel.insert(note as Note)
+                        showToast(getString(R.string.added))
+                    }
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
