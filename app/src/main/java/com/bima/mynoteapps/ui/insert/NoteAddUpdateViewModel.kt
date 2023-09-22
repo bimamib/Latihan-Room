@@ -1,4 +1,22 @@
 package com.bima.mynoteapps.ui.insert
 
-class NoteAddUpdateViewModel {
+import android.app.Application
+import androidx.lifecycle.ViewModel
+import com.bima.mynoteapps.database.Note
+import com.bima.mynoteapps.repository.NoteRepository
+
+class NoteAddUpdateViewModel(application: Application) : ViewModel() {
+    private val mNoteRepository: NoteRepository = NoteRepository(application)
+
+    fun insert(note: Note) {
+        mNoteRepository.insert(note)
+    }
+
+    fun update(note: Note) {
+        mNoteRepository.update(note)
+    }
+
+    fun delete(note: Note) {
+        mNoteRepository.delete(note)
+    }
 }
